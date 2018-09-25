@@ -19,3 +19,7 @@ table {
   width: 90%;
   height: 50%;
 }
+
+.guessLetter {
+  color: red;
+}
