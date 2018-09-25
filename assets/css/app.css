@@ -7,3 +7,15 @@
     text-align: center;
 }
 
+th, td{
+  border: 2px solid black;
+  text-align: center;
+  width: 25%;
+  height: 25%;
+  padding: 25px;
+}
+
+table {
+  width: 90%;
+  height: 50%;
+}
