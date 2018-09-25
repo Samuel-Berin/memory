@@ -40,12 +40,13 @@ class MatchGame extends React.Component {
       score: 0,
     };}
 
-
+  // Creates a new board, 4x4, with two of each of the first 8 letters in
+  // the alphabet
   rollBoard() {
     var availableLetters = ["A", "A", "B", "B", "C", "C",
      "D","D", "E", "E", "F", "F", "G", "G", "H", "H"];
     var boardModel = [];
-
+    // Grab a random letter and put it in that spot
     for (var i = 0; i < 4; i++) {
       var row = [];
       for (var j = 0; j < 4; j++){
@@ -58,6 +59,7 @@ class MatchGame extends React.Component {
     return boardModel;
   }
 
+  // Reset every element of the state
   restart() {
     var newBoard = this.rollBoard();
     var state1 = {
@@ -70,6 +72,8 @@ class MatchGame extends React.Component {
   }
 
 
+  // Called when a button is clicked
+  // Branches for situations
   guess(row, col) {
 
     if (this.state.firstGuess != "" && this.state.secondGuess != "") {
@@ -98,8 +102,8 @@ class MatchGame extends React.Component {
         score: newScore,
       } );
       this.setState(state1);
-
       this.revealByIndices(row, col);
+      //Wait a second before hiding the bad guesses
       setTimeout(function () {
         this.updateConcealedValues();
       }.bind(this), 1000);
@@ -107,6 +111,7 @@ class MatchGame extends React.Component {
     }
   }
 
+  //Reveal a tile by its place on the board
   revealByIndices(row, col) {
     var guessLetter = this.state.board[row][col][0];
     this.state.board[row][col] = [guessLetter, true];
@@ -119,7 +124,7 @@ class MatchGame extends React.Component {
 
 
 
-
+  // Decides what values to hide or show based on first and second guesses
   updateConcealedValues() {
     var newboard = this.state.board.slice(0)
     var correctGuess = this.state.firstGuess == this.state.secondGuess;
@@ -150,17 +155,7 @@ class MatchGame extends React.Component {
     this.setState(state1);
   }
 
-
-
-  swap(_ev) {
-    let state1 = _.assign({}, this.state, { board: this.state.board });
-    this.setState(state1);
-  }
-
-  hax(_ev) {
-    alert("hax!");
-  }
-
+  //Renders a single board cell
   renderBoardCell(row, col) {
     var cell = this.state.board[row][col];
     var displayVal = "?"
@@ -170,7 +165,7 @@ class MatchGame extends React.Component {
 
       if (this.state.firstGuess == displayVal ||
         this.state.secondGuess == displayVal) {
-          return <td class="guessLetter"> {displayVal}</td>
+          return <td className="guessLetter"> {displayVal}</td>
         }
 
       else {
@@ -183,6 +178,7 @@ class MatchGame extends React.Component {
     </td>
   }
 
+  //Renders a board row
   renderBoardRow(row) {
     return <tr>
       {this.renderBoardCell(row, 0)}
@@ -192,19 +188,29 @@ class MatchGame extends React.Component {
     </tr>
   }
 
+  //Will return elements when the game has been won
+  haveWon() {
+    var winner = true;
+    for (var i = 0; i < 4; i++) {
+      for (var j = 0; j < 4; j++){
+        var isDisplayed = this.state.board[i][j][1];
+        winner = winner && isDisplayed
+      }
+    }
+
+    if (winner) {
+      return <h1>You Win!!! Press the Restart Button To Play Again!</h1>
+    }
+  }
+
+  //Renders the app
   render() {
-    let button = <div className="column" onMouseMove={this.swap.bind(this)}>
-      <p><button onClick={this.hax.bind(this)}>Click Me</button></p>
-    </div>;
-
-    let blank = <div className="column">
-      <p>Nothing here.</p>
-    </div>;
-
-
 
     return <div>
       <p>Your score is: {this.state.score}</p>
+
+
+      {this.haveWon()}
 
       <table>
         <tbody>
